@@ -18,6 +18,14 @@ This version has breaking changes — APIs, conventions, and file structure may 
 6. `docs/decisions/` 配下の関連ADR
 7. `node_modules/next/dist/docs/` 配下の関連Next.jsガイド
 
+## Codex運用
+
+このリポジトリは Codex での開発を前提にします。
+
+- プロジェクト内 Skill の正本は `.codex/skills/` に置く。
+- `~/.codex/skills/` へ反映するときは `npm run sync:codex-skills` を使う。
+- Skill を更新したら、必要に応じて Codex を再起動する。
+
 ## プロダクト境界
 
 Active Recallは、アクティブリコール用の学習内容を保存・復習するためのミニマルな学習アプリです。

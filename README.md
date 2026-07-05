@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Active Recall
 
-## Getting Started
+読書の学びを保存し、あとから復習しやすくするミニマルな学習アプリです。
 
-First, run the development server:
+## 開発
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 必須の環境変数
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+`.env.local` に次を設定します。
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
+SUPABASE_SECRET_KEY=...
+ACTIVE_RECALL_API_KEY=...
+```
 
-## Learn More
+- `NEXT_PUBLIC_SUPABASE_URL`: Supabase プロジェクトURL
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`: 将来の SSR/Auth 拡張も見据えた公開キー
+- `SUPABASE_SECRET_KEY`: サーバー専用の Supabase secret key
+- `ACTIVE_RECALL_API_KEY`: Custom GPT Actions から `POST /api/recall-logs` を呼ぶための Bearer API キー
 
-To learn more about Next.js, take a look at the following resources:
+## Supabase
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+初期マイグレーションは `supabase/migrations/20260705161000_create_recall_logs.sql` にあります。
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+今後型生成を追加する場合の例:
 
-## Deploy on Vercel
+```bash
+npx supabase gen types typescript --local > src/lib/supabase/database.types.ts
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Codex Skills
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+このリポジトリのローカル Skill 定義は `.codex/skills/` で管理しています。
+
+Codex が読む `~/.codex/skills/` へ同期するには:
+
+```bash
+npm run sync:codex-skills
+```
+
+同期スクリプト本体は `.codex/sync-skills.sh` にあります。
