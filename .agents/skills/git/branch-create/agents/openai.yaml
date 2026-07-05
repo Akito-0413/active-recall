@@ -1,0 +1,4 @@
+interface:
+  display_name: "Branch Create"
+  short_description: "mainとの差分を確認して適切な作業ブランチを作成する。"
+  default_prompt: "このSkillを使って、mainとの差分を確認し、Git運用に沿った作業ブランチを作成してください。"

@@ -1,0 +1,4 @@
+interface:
+  display_name: "PR Create"
+  short_description: "mainとの差分を確認してPull Requestを作成する。"
+  default_prompt: "このSkillを使って、mainとの差分を確認してPRを作成してください。"

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Commit & Push"
+  short_description: "現在のGit変更を安全に確認し、コミットしてpushする。"
+  default_prompt: "このSkillを使って、現在のリポジトリ変更をコミットしてpushしてください。"
