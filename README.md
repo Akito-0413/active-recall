@@ -9,6 +9,18 @@ npm install
 npm run dev
 ```
 
+## CI
+
+GitHub Actionsで、`main` 向けPull Requestと `main` へのpush時に次を実行します。
+
+```bash
+npm ci
+npm run lint
+npm run build
+```
+
+Vercel Previewはデプロイ結果の確認、GitHub Actionsはコード品質と本番ビルドの確認を担当します。
+
 ## 必須の環境変数
 
 `.env.local` に次を設定します。
