@@ -12,13 +12,15 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reporter: ["text", "html", "json-summary"],
+      include: ["src/**/*.{ts,tsx}"],
       exclude: [
         "node_modules/**",
         ".next/**",
         "coverage/**",
-        "src/app/**",
-        "src/features/**/components/**",
         "src/lib/supabase/**",
+        "src/features/recall-logs/services/recall-log-service.ts",
+        "src/**/*.test.ts",
+        "src/**/*.test.tsx",
       ],
     },
   },
