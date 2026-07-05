@@ -1,0 +1,176 @@
+openapi: 3.1.0
+info:
+  title: Active Recall Custom GPT Actions API
+  version: 1.0.0
+  description: API for saving Custom GPT generated reading recall logs to Active Recall.
+servers:
+  - url: https://YOUR_DEPLOYED_APP_URL
+    description: Replace with the deployed Active Recall app URL.
+security:
+  - bearerAuth: []
+paths:
+  /api/recall-logs:
+    post:
+      operationId: createRecallLog
+      summary: Save a reading recall log
+      description: Saves a Custom GPT generated reading recall log after the user explicitly approves saving it.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRecallLogRequest"
+            examples:
+              bookRecallLog:
+                summary: Reading recall log
+                value:
+                  bookTitle: Example Book
+                  summaryPoints:
+                    - The first key idea the user wants to remember.
+                    - The second key idea, expressed in recall-friendly language.
+                    - The third key idea connected to the user's own understanding.
+                  reflection: This changed how I think about applying the idea in daily work.
+                  source: custom_gpt
+      responses:
+        "200":
+          description: The recall log was saved.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateRecallLogResponse"
+        "400":
+          description: The request body is invalid or not valid JSON.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: The bearer token is missing or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "500":
+          description: The server failed to save the recall log.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Use the same value as ACTIVE_RECALL_API_KEY.
+  schemas:
+    CreateRecallLogRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - bookTitle
+        - summaryPoints
+        - source
+      properties:
+        bookTitle:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: The title of the book being recalled.
+        summaryPoints:
+          type: array
+          minItems: 3
+          maxItems: 4
+          description: Three to four recall-friendly summary points.
+          items:
+            type: string
+            minLength: 1
+            maxLength: 280
+        reflection:
+          type:
+            - string
+            - "null"
+          maxLength: 2000
+          description: The user's personal insight, application, question, or takeaway.
+        source:
+          type: string
+          const: custom_gpt
+          description: Must always be custom_gpt for Custom GPT Actions.
+    CreateRecallLogResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - data
+      properties:
+        data:
+          $ref: "#/components/schemas/RecallLog"
+    RecallLog:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - bookTitle
+        - summaryPoints
+        - reflection
+        - reviewed
+        - reviewedAt
+        - source
+        - sourceType
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        bookTitle:
+          type: string
+        summaryPoints:
+          type: array
+          items:
+            type: string
+        reflection:
+          type:
+            - string
+            - "null"
+        reviewed:
+          type: boolean
+          const: false
+        reviewedAt:
+          type:
+            - string
+            - "null"
+          format: date-time
+        source:
+          type: string
+          const: custom_gpt
+        sourceType:
+          type: string
+          const: book
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          additionalProperties: false
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+              examples:
+                - unauthorized
+                - validation_error
+                - invalid_json
+                - missing_configuration
+                - internal_server_error
+            message:
+              type: string
