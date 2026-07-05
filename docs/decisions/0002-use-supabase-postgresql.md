@@ -6,7 +6,7 @@ Accepted。
 
 ## Context
 
-Active Recallでは、学習ソースとGPT生成の学習エントリーを永続化する必要があります。
+Active Recallでは、GPT生成または手動登録された学習ログを永続化する必要があります。
 
 データ保存先としてSupabase PostgreSQLを使用する方針です。MVPでは認証を実装しませんが、将来的にSupabase Authを導入できるようにします。
 
@@ -20,7 +20,7 @@ Supabaseの設計・実装では、公式ドキュメントで現在推奨され
 
 ## Consequences
 
-- ソースとエントリーのDB向けデータモデルを定義する。
+- MVPでは `recall_logs` のDB向けデータモデルを定義する。
 - DBアクセスは専用の関数またはモジュールに分離する。
 - 将来の認証追加時は、既存モデルにユーザー所有を追加する。
 - Row Level SecurityなどSupabase固有の判断は、実装時に別ADRとして記録する。
