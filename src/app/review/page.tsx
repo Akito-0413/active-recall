@@ -1,8 +1,8 @@
 export const dynamic = "force-dynamic";
 
+import { ProtectedPageShell } from "@/features/auth/components/protected-page-shell";
 import { EmptyState } from "@/features/recall-logs/components/empty-state";
 import { ErrorState } from "@/features/recall-logs/components/error-state";
-import { PageShell } from "@/features/recall-logs/components/page-shell";
 import { RecallLogList } from "@/features/recall-logs/components/recall-log-list";
 import { listPendingRecallLogs } from "@/features/recall-logs/services/recall-log-service";
 import { isMissingEnvironmentError } from "@/lib/env";
@@ -31,7 +31,7 @@ export default async function ReviewPage() {
   const { logs, errorMessage } = await loadReviewPageData();
 
   return (
-    <PageShell
+    <ProtectedPageShell
       title="未復習ログ"
       description="まだ見返していない学びだけを集めて、次に思い出す対象をはっきりさせます。"
     >
@@ -47,6 +47,6 @@ export default async function ReviewPage() {
       ) : (
         <RecallLogList logs={logs} highlightPending />
       )}
-    </PageShell>
+    </ProtectedPageShell>
   );
 }

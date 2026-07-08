@@ -2,9 +2,9 @@ export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 
+import { ProtectedPageShell } from "@/features/auth/components/protected-page-shell";
 import { EmptyState } from "@/features/recall-logs/components/empty-state";
 import { ErrorState } from "@/features/recall-logs/components/error-state";
-import { PageShell } from "@/features/recall-logs/components/page-shell";
 import { RecallLogList } from "@/features/recall-logs/components/recall-log-list";
 import { listRecallLogs } from "@/features/recall-logs/services/recall-log-service";
 import { isMissingEnvironmentError } from "@/lib/env";
@@ -35,15 +35,18 @@ export default async function LogsPage() {
   const { logs, errorMessage } = await loadLogsPageData();
 
   return (
-    <PageShell
+    <ProtectedPageShell
       title="学習ログ一覧"
       description="本から得た学びを、あとで思い出しやすい単位で見返します。"
       actions={
         <Link
           href="/logs/new"
-          className="inline-flex rounded-full bg-stone-900 px-5 py-3 text-sm font-medium text-white transition hover:bg-stone-700"
+          className="inline-flex items-center gap-2 rounded-full border border-stone-800 bg-stone-800 px-5 py-3 text-sm font-medium text-white shadow-[0_10px_24px_rgba(41,37,36,0.12)] transition hover:bg-stone-700"
         >
-          手動登録
+          <span className="text-white">手動登録</span>
+          <span aria-hidden="true" className="text-base leading-none text-white">
+            +
+          </span>
         </Link>
       }
     >
@@ -72,6 +75,6 @@ export default async function LogsPage() {
           <RecallLogList logs={logs} />
         </div>
       )}
-    </PageShell>
+    </ProtectedPageShell>
   );
 }

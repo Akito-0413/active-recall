@@ -1,12 +1,14 @@
 import "server-only";
 
-import { createAdminClient } from "@/lib/supabase/admin";
+import { requireCurrentUser } from "@/lib/auth/session";
 import type {
   RecallLog,
   RecallLogInsert,
   RecallLogRecord,
   UpdateReviewStatusInput,
 } from "@/features/recall-logs/types";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { createServerSupabaseClient } from "@/lib/supabase/server";
 
 class RecallLogServiceError extends Error {
   constructor(
@@ -57,7 +59,8 @@ export function isRecallLogServiceError(
 }
 
 export async function listRecallLogs() {
-  const supabase = createAdminClient();
+  await requireCurrentUser();
+  const supabase = await createServerSupabaseClient();
   const { data, error } = await supabase
     .from("recall_logs")
     .select("*")
@@ -69,7 +72,8 @@ export async function listRecallLogs() {
 }
 
 export async function listPendingRecallLogs() {
-  const supabase = createAdminClient();
+  await requireCurrentUser();
+  const supabase = await createServerSupabaseClient();
   const { data, error } = await supabase
     .from("recall_logs")
     .select("*")
@@ -82,7 +86,8 @@ export async function listPendingRecallLogs() {
 }
 
 export async function getRecallLogById(id: string) {
-  const supabase = createAdminClient();
+  await requireCurrentUser();
+  const supabase = await createServerSupabaseClient();
   const { data, error } = await supabase
     .from("recall_logs")
     .select("*")
@@ -99,8 +104,10 @@ export async function getRecallLogById(id: string) {
 }
 
 export async function createRecallLog(input: RecallLogInsert) {
-  const supabase = createAdminClient();
+  const currentUser = await requireCurrentUser();
+  const supabase = await createServerSupabaseClient();
   const payload = {
+    owner_id: currentUser.id,
     book_title: input.bookTitle,
     summary_points: input.summaryPoints,
     reflection: input.reflection ?? null,
@@ -124,7 +131,8 @@ export async function createRecallLog(input: RecallLogInsert) {
 export async function updateRecallLogReviewStatus(
   input: UpdateReviewStatusInput,
 ) {
-  const supabase = createAdminClient();
+  await requireCurrentUser();
+  const supabase = await createServerSupabaseClient();
   const { data, error } = await supabase
     .from("recall_logs")
     .update({
@@ -148,7 +156,8 @@ export async function updateRecallLogReviewStatus(
 }
 
 export async function deleteRecallLog(id: string) {
-  const supabase = createAdminClient();
+  await requireCurrentUser();
+  const supabase = await createServerSupabaseClient();
   const { data, error } = await supabase
     .from("recall_logs")
     .delete()
@@ -164,4 +173,28 @@ export async function deleteRecallLog(id: string) {
       "not_found",
     );
   }
+}
+
+export async function createExternalRecallLog(input: RecallLogInsert) {
+  const supabase = createAdminClient();
+  const payload = {
+    owner_id: null,
+    book_title: input.bookTitle,
+    summary_points: input.summaryPoints,
+    reflection: input.reflection ?? null,
+    reviewed: false,
+    reviewed_at: null,
+    source: input.source,
+    source_type: "book" as const,
+  };
+
+  const { data, error } = await supabase
+    .from("recall_logs")
+    .insert(payload)
+    .select("*")
+    .single();
+
+  handleSupabaseError("学習ログを保存できませんでした。", error);
+
+  return mapRecallLog(data as RecallLogRecord);
 }
