@@ -24,9 +24,15 @@ export function EmptyState({
           <div className="pt-3">
             <Link
               href={ctaHref}
-              className="inline-flex rounded-full bg-stone-900 px-5 py-3 text-sm font-medium text-white transition hover:bg-stone-700"
+              className="inline-flex items-center gap-2 rounded-full border border-stone-800 bg-stone-800 px-5 py-3 text-sm font-medium text-white shadow-[0_10px_24px_rgba(41,37,36,0.12)] transition hover:bg-stone-700"
             >
-              {ctaLabel}
+              <span className="text-white">{ctaLabel}</span>
+              <span
+                aria-hidden="true"
+                className="text-base leading-none text-white"
+              >
+                {"->"}
+              </span>
             </Link>
           </div>
         ) : null}

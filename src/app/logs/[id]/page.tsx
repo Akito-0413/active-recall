@@ -2,9 +2,9 @@ export const dynamic = "force-dynamic";
 
 import { notFound } from "next/navigation";
 
+import { ProtectedPageShell } from "@/features/auth/components/protected-page-shell";
 import { DeleteRecallLogForm } from "@/features/recall-logs/components/delete-recall-log-form";
 import { ErrorState } from "@/features/recall-logs/components/error-state";
-import { PageShell } from "@/features/recall-logs/components/page-shell";
 import { ReviewToggleForm } from "@/features/recall-logs/components/review-toggle-form";
 import { StatusBadge } from "@/features/recall-logs/components/status-badge";
 import { getRecallLogById } from "@/features/recall-logs/services/recall-log-service";
@@ -52,12 +52,12 @@ export default async function RecallLogDetailPage({
 
   if (errorMessage) {
     return (
-      <PageShell
+      <ProtectedPageShell
         title="学習ログ詳細"
         description="要約ポイントと自分の気づきを見返して、理解が曖昧なところを思い出します。"
       >
         <ErrorState message={errorMessage} />
-      </PageShell>
+      </ProtectedPageShell>
     );
   }
 
@@ -66,7 +66,7 @@ export default async function RecallLogDetailPage({
   }
 
   return (
-    <PageShell
+    <ProtectedPageShell
       title={recallLog.bookTitle}
       description="要約ポイントと自分の気づきを見返して、理解が曖昧なところを思い出します。"
     >
@@ -121,6 +121,6 @@ export default async function RecallLogDetailPage({
           <DeleteRecallLogForm id={recallLog.id} />
         </aside>
       </div>
-    </PageShell>
+    </ProtectedPageShell>
   );
 }

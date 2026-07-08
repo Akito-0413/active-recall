@@ -28,6 +28,7 @@ export type UpdateReviewStatusInput = {
 
 export type RecallLogRecord = {
   id: string;
+  owner_id: string | null;
   book_title: string;
   summary_points: unknown;
   reflection: string | null;

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { createRecallLog } from "@/features/recall-logs/services/recall-log-service";
+import { createExternalRecallLog } from "@/features/recall-logs/services/recall-log-service";
 import { customGptRecallLogCreateSchema } from "@/features/recall-logs/validation";
 import { getRecallApiKey, isMissingEnvironmentError } from "@/lib/env";
 
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
       return errorResponse(400, "validation_error", "入力値が不正です。");
     }
 
-    const recallLog = await createRecallLog(parsed.data);
+    const recallLog = await createExternalRecallLog(parsed.data);
 
     return NextResponse.json({
       data: recallLog,
